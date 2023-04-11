@@ -1,0 +1,45 @@
+import datetime
+from flask import Flask, jsonify, request
+import bcrypt
+from validations import *
+from databaseConection import *
+
+app = Flask(__name__)
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.json['email']
+    password = request.json['password'].encode('UTF-8')
+    mycursor.execute("SELECT hash FROM Users WHERE email = %(email)s", {"email": email})
+    values = mycursor.fetchone()
+    if values is None:
+        return jsonify({"message": "Incorrect Email"})
+    else:
+        pswd = values[0].encode('UTF-8')
+        if bcrypt.hashpw(password,pswd) == pswd:
+            payload = {
+                "sub": email,
+                "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+            }
+            token = jwt.encode(payload, secretKey, algorithm='HS256')
+            mycursor.reset()
+            mycursor.execute("SELECT userID FROM Users WHERE email = %(email)s", {"email": email})
+            user = mycursor.fetchone()
+            userID = user[0]
+            mycursor.reset()
+            mycursor.execute("SELECT tokenID FROM Tokens WHERE userID = %(userID)s", {"userID": userID})
+            tokenCheck = mycursor.fetchone()
+            if tokenCheck is not None:
+                mycursor.reset()
+                mycursor.execute("UPDATE Tokens SET token = %(token)s WHERE userID = %(userID)s", ({"token": token, "userID": userID}))
+                db.commit()
+                return jsonify({"token": token})
+            else:
+                mycursor.execute("INSERT INTO Tokens (userID, token) VALUES (%(userID)s,%(token)s)",{"userID": userID, "token": token})
+                db.commit()
+                return jsonify({"token": token})
+        else:
+            return jsonify({"message": "Incorrect Password"})
+
+if __name__ == "__main__":
+    app.run(debug=True, port=1000)
