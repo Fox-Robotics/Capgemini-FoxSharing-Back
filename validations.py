@@ -3,6 +3,7 @@ from functools import wraps
 from flask import jsonify, request
 import jwt
 import app
+from databaseConection import *
 
 def valPassword(passwd):
     if len(passwd) < 8:
@@ -54,7 +55,7 @@ def tokenRequired(f):
         if not token:
             return jsonify({'message': 'token is missing!'}), 403
         try:
-            access_token = jwt.decode(token, 'termo69puerta21', verify=True, algorithms=["HS256"])
+            access_token = jwt.decode(token, secretKey, verify=True, algorithms=["HS256"])
         except:
             return jsonify({'message': 'token is invalid'}), 403
         return f(*args, *kwargs)
