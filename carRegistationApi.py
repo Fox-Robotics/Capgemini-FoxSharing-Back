@@ -20,7 +20,7 @@ def registerCar():
 
     print(brand,model,year,color,plate,serialNum,kmLiter,mileage,status,latitude,longitude)
 
-    if valNames(brand) and valModelo(model) and valNames(color) and valPlacas(plate) and valKilometros(kmLiter) and valKilometros(mileage):
+    if valNames(brand) and valModel(model) and valNames(color) and valPlate(plate) and valKilometers(kmLiter) and valKilometers(mileage):
         newCar = {
             "brand": brand,
             "model": model,

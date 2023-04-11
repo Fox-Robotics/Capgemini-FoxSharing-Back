@@ -28,23 +28,23 @@ def valEmail(email):
         return False
     return True
 
-def valRole(role):
-    if not re.fullmatch("[aA]|[bB]?", role):
+def valStatus(status):
+    if not re.fullmatch("[pP]|[dD]?", status):
         return False
     return True
 
-def valModelo(modelo):
-    if not re.fullmatch("[A-Za-z0-9]{1,30}", modelo):
+def valModel(model):
+    if not re.fullmatch("[A-Za-z0-9]{1,30}", model):
         return False
     return True
 
-def valPlacas(placas):
-    if not re.fullmatch("[A-Z0-9]{1,9}", placas):
+def valPlate(plate):
+    if not re.fullmatch("[A-Z0-9]{1,9}", plate):
         return False
     return True
 
-def valKilometros(kilometros):
-    if not re.fullmatch("[0-9]{2,1000000}", kilometros):
+def valKilometers(kilometers):
+    if not re.fullmatch("[0-9]{2,1000000}", kilometers):
         return False
     return True
 

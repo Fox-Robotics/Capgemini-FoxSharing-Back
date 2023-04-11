@@ -18,7 +18,7 @@ def trip():
     values = mycursor.fetchone()
     userID = values[0]
 
-    if valKilometros(kmTraveled):
+    if valKilometers(kmTraveled):
         newTrip = {
             "userID": userID,
             "initialLocation": initialLocation,
