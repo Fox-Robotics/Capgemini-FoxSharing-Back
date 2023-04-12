@@ -1,7 +1,8 @@
 import datetime
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 import bcrypt, jwt
-from databaseConection import mycursor, db, secretKey
+from databaseConection import mycursor, db
+from config import secretKeyToken
 
 userLoginBP = Blueprint('userLoginBP', __name__)
 
@@ -20,7 +21,7 @@ def login():
                 "sub": email,
                 "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
             }
-            token = jwt.encode(payload, secretKey, algorithm='HS256')
+            token = jwt.encode(payload, secretKeyToken, algorithm='HS256')
             mycursor.reset()
             mycursor.execute("SELECT userID FROM Users WHERE email = %(email)s", {"email": email})
             user = mycursor.fetchone()
