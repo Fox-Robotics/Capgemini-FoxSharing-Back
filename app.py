@@ -7,7 +7,8 @@ from tripRegistrationApi import tripRegistrationBP
 from userLoginApi import userLoginBP
 from userRegistrationApi import userRegistrationBP
 from addressToLocation import addressToLocationBP
-from stripeMethodApi import paymentMethodBP
+from stripeMethodApi import stripeMethodBP
+from paypalMethodApi import paypalMethodBP
 
 app = Flask(__name__)
 app.register_blueprint(showCarsBP)
@@ -19,7 +20,12 @@ app.register_blueprint(showUserBP)
 app.register_blueprint(userLoginBP)
 app.register_blueprint(addressToLocationBP)
 app.register_blueprint(paymentMethodBP)
+app.register_blueprint(stripeMethodBP)
+app.register_blueprint(paypalMethodBP)
+
 @app.route('/')
 def index():
     return jsonify({"message": "Index"})
+
+
 
