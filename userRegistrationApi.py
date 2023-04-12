@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 import bcrypt
 from validations import valNames, valEmail, valPassword
 from databaseConection import mycursor, db

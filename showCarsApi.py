@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, Blueprint
 from databaseConection import mycursor
 
 showCarsBP = Blueprint('blueprint', __name__)

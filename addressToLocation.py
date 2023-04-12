@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 import requests
 import json
-from databaseConection import AzureMapskey
+from config import AzureMapskey
 
 addressToLocationBP = Blueprint('addressToLocationBP', __name__)
 
