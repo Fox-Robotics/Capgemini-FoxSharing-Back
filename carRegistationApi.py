@@ -17,8 +17,7 @@ def registerCar():
     status = request.json['status']
     latitude = request.json['latitude']
     longitude = request.json['longitude']
-
-    print(brand,model,year,color,plate,serialNum,kmLiter,mileage,status,latitude,longitude)
+    image = request.json['image']
 
     if valNames(brand) and valModel(model) and valNames(color) and valPlate(plate) and valKilometers(kmLiter) and valKilometers(mileage):
         newCar = {
@@ -32,10 +31,11 @@ def registerCar():
             "mileage": mileage,
             "status": status,
             "latitude": latitude,
-            "longitude": longitude
+            "longitude": longitude,
+            "image": image
         }
 
-        mycursor.execute("INSERT INTO Cars (brand,model,color,plate,serialNum,kmLiter,mileage,status,latitude,longitude,year) VALUES (%(brand)s,%(model)s,%(color)s,%(plate)s,%(serialNum)s,%(kmLiter)s,%(mileage)s,%(status)s,%(latitude)s,%(longitude)s,%(year)s)", newCar)
+        mycursor.execute("INSERT INTO Cars (brand,model,color,plate,serialNum,kmLiter,mileage,status,latitude,longitude,year, image) VALUES (%(brand)s,%(model)s,%(color)s,%(plate)s,%(serialNum)s,%(kmLiter)s,%(mileage)s,%(status)s,%(latitude)s,%(longitude)s,%(year)s,%(image)s)", newCar)
         db.commit()
 
         return jsonify({"message": "Car Registered Successfully"})
