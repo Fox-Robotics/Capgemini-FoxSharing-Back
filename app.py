@@ -6,6 +6,7 @@ from showUserApi import showUserBP
 from tripRegistrationApi import tripRegistrationBP
 from userLoginApi import userLoginBP
 from userRegistrationApi import userRegistrationBP
+from addressToLocation import addressToLocationBP
 
 app = Flask(__name__)
 app.register_blueprint(showCarsBP)
@@ -15,6 +16,7 @@ app.register_blueprint(tripRegistrationBP)
 app.register_blueprint(carRegistrationBP)
 app.register_blueprint(showUserBP)
 app.register_blueprint(userLoginBP)
+app.register_blueprint(addressToLocationBP)
 
 @app.route('/')
 def index():

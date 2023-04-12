@@ -1,7 +1,7 @@
 import datetime
 from flask import Flask, jsonify, request, Blueprint
-import bcrypt
-from databaseConection import mycursor, db
+import bcrypt, jwt
+from databaseConection import mycursor, db, secretKey
 
 userLoginBP = Blueprint('userLoginBP', __name__)
 
