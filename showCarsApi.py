@@ -1,10 +1,9 @@
-from flask import Flask, jsonify, request
-from validations import *
-from databaseConection import *
+from flask import Flask, jsonify, request, Blueprint
+from databaseConection import mycursor
 
-app = Flask(__name__)
+showCarsBP = Blueprint('blueprint', __name__)
 
-@app.route('/cars', methods=['GET'])
+@showCarsBP.route('/cars', methods=['GET'])
 def cars():
     mycursor.execute("SELECT * FROM Cars")
     row = [x[0] for x in mycursor.description]
@@ -14,6 +13,3 @@ def cars():
         carsData.append(dict(zip(row, result)))
 
     return jsonify({"Cars": carsData})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)

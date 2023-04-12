@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request
-from validations import *
-from databaseConection import *
+from flask import Flask, jsonify, request, Blueprint
+from validations import tokenRequired
+from databaseConection import mycursor
 
-app = Flask(__name__)
+historyBP = Blueprint('historyBP', __name__)
 
-@app.route('/history', methods=['POST'])
+@historyBP.route('/history', methods=['POST'])
 @tokenRequired
 def history():
     token = request.json['token']
@@ -20,6 +20,3 @@ def history():
         tripsData.append(dict(zip(row, result)))
 
     return jsonify({"Trips": tripsData})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)

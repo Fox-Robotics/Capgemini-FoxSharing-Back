@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request
-from validations import *
-from databaseConection import *
+from flask import Flask, jsonify, request, Blueprint
+from validations import valNames, valStatus, valModel, valPlate, valKilometers
+from databaseConection import mycursor, db
 
-app = Flask(__name__)
+carRegistrationBP = Blueprint('carRegistrationBP', __name__)
 
-@app.route('/registerCar', methods=['POST'])
+@carRegistrationBP.route('/registerCar', methods=['POST'])
 def registerCar():
     brand = request.json['brand']
     model = request.json['model']
@@ -41,6 +41,3 @@ def registerCar():
         return jsonify({"message": "Car Registered Successfully"})
     else:
         return jsonify({"message": "Car Registered Unsuccessfully"})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)

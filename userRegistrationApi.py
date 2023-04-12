@@ -1,12 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 import bcrypt
-import mysql.connector
-from validations import *
-from databaseConection import *
+from validations import valNames, valEmail, valPassword
+from databaseConection import mycursor, db
 
-app = Flask(__name__)
+userRegistrationBP = Blueprint('userRegistrationBP', __name__)
 
-@app.route('/register', methods=['POST'])
+@userRegistrationBP.route('/register', methods=['POST'])
 def registerUser():
     name = request.json['name']
     firstLastName = request.json['firstLastName']
@@ -30,6 +29,3 @@ def registerUser():
         return jsonify({"message": "User Signed Up Successfully"})
     else:
         return jsonify({"message": "User Signed Up Unsuccessfully"})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)

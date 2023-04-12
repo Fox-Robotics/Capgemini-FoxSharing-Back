@@ -1,10 +1,10 @@
-from flask import Flask, jsonify, request
-from validations import *
-from databaseConection import *
+from flask import Flask, jsonify, request, Blueprint
+from validations import tokenRequired
+from databaseConection import mycursor
 
-app = Flask(__name__)
+showUserBP = Blueprint('showUserBP', __name__)
 
-@app.route('/user', methods=['POST'])
+@showUserBP.route('/user', methods=['POST'])
 @tokenRequired
 def user():
     token = request.json['token']
@@ -20,7 +20,3 @@ def user():
     for result in data:
         userData.append(dict(zip(row,result)))
     return jsonify({"User": userData})
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)

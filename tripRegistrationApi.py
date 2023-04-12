@@ -1,11 +1,10 @@
-from flask import Flask, jsonify, request
-from validations import *
-from databaseConection import *
+from flask import Flask, jsonify, request, Blueprint
+from validations import valKilometers
+from databaseConection import mycursor, db
 import datetime
 
-app = Flask(__name__)
-
-@app.route('/trip', methods=['POST'])
+tripRegistrationBP = Blueprint('tripRegistrationBP', __name__)
+@tripRegistrationBP.route('/trip', methods=['POST'])
 def trip():
     token = request.json['token']
     initialLocation = request.json['initialLocation']
@@ -33,6 +32,3 @@ def trip():
         return jsonify({"message": "Trip Registered Successfully"})
     else:
         return jsonify({"message": "Trip Registered Unsuccessfully"})
-
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)
