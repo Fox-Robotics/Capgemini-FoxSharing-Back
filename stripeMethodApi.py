@@ -1,4 +1,3 @@
-import stripe
 from flask import Flask, jsonify, request
 import mysql.connector
 from validations import *
