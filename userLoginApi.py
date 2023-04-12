@@ -1,12 +1,11 @@
 import datetime
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Blueprint
 import bcrypt
-from validations import *
-from databaseConection import *
+from databaseConection import mycursor, db
 
-app = Flask(__name__)
+userLoginBP = Blueprint('userLoginBP', __name__)
 
-@app.route('/login', methods=['POST'])
+@userLoginBP.route('/login', methods=['POST'])
 def login():
     email = request.json['email']
     password = request.json['password'].encode('UTF-8')
@@ -40,6 +39,3 @@ def login():
                 return jsonify({"token": token})
         else:
             return jsonify({"message": "Incorrect Password"})
-
-if __name__ == "__main__":
-    app.run(debug=True, port=1000)

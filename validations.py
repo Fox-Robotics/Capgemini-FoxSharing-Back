@@ -2,7 +2,6 @@ import re
 from functools import wraps
 from flask import jsonify, request
 import jwt
-import app
 from databaseConection import *
 
 def valPassword(passwd):
@@ -28,23 +27,23 @@ def valEmail(email):
         return False
     return True
 
-def valRole(role):
-    if not re.fullmatch("[aA]|[bB]?", role):
+def valStatus(status):
+    if not re.fullmatch("[pP]|[dD]?", status):
         return False
     return True
 
-def valModelo(modelo):
-    if not re.fullmatch("[A-Za-z0-9]{1,30}", modelo):
+def valModel(model):
+    if not re.fullmatch("[A-Za-z0-9]{1,30}", model):
         return False
     return True
 
-def valPlacas(placas):
-    if not re.fullmatch("[A-Z0-9]{1,9}", placas):
+def valPlate(plate):
+    if not re.fullmatch("[A-Z0-9]{1,9}", plate):
         return False
     return True
 
-def valKilometros(kilometros):
-    if not re.fullmatch("[0-9]{2,1000000}", kilometros):
+def valKilometers(kilometers):
+    if not re.fullmatch("[0-9]{2,1000000}", kilometers):
         return False
     return True
 
@@ -60,16 +59,3 @@ def tokenRequired(f):
             return jsonify({'message': 'token is invalid'}), 403
         return f(*args, *kwargs)
     return decorated
-
-def validate_credit_card(card_number: str) -> bool:
-    card_number = [int(num) for num in card_number]
-    checkDigit = card_number.pop(-1)
-    card_number.reverse()
-    card_number = [num * 2 if idx % 2 == 0
-                   else num for idx, num in enumerate(card_number)]
-    card_number = [num - 9 if idx % 2 == 0 and num > 9
-                   else num for idx, num in enumerate(card_number)]
-    card_number.append(checkDigit)
-    checkSum = sum(card_number)
-
-    return checkSum % 10 == 0
