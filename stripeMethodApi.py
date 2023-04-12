@@ -1,23 +1,35 @@
-from flask import Flask, jsonify, request
-import mysql.connector
-from validations import *
-from databaseConection import *
+from flask import Blueprint, redirect
+from config import stripeSecretKey
 import stripe
 
-app = Flask(__name__)
+paymentMethodBP = Blueprint('paymentMethodBP', __name__)
 
-@app.route('/payment')
+@paymentMethodBP.route('/payment')
 def payment():
     stripe.api_key = stripeSecretKey
 
-    stripe.checkout.Session.create(
-        cancel_url="https://facebook.com",
-        line_items=[{"price": 'price_1Mvn5eCP2A27V5KAAOiGYIaZ', "quantity": 67}],
-        mode="payment",
-        success_url="https://youtube.com",
+    total = 1000
+
+    product = 'normalTrip'
+    price = total
+
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=[{
+            'price_data': {
+                'currency': 'mxn',
+                'product_data': {
+                    'name': product,
+                },
+                'unit_amount': price,
+            },
+            'quantity': 1,
+        }],
+        mode='payment',
+        success_url='https://example.com/success',
+        cancel_url='https://example.com/cancel',
     )
 
-    return jsonify({'message':"hi"})
+    checkout_url = session.url
 
-if __name__ == '__main__':
-    app.run(debug=True, port=1000)
+    return redirect(checkout_url)
