@@ -9,6 +9,7 @@ from userRegistrationApi import userRegistrationBP
 from locationApi import addressToLocationBP
 from stripeMethodApi import stripeMethodBP
 from paypalMethodApi import paypalMethodBP
+from electronicWalletApi import electronicWalletBP
 
 app = Flask(__name__)
 app.register_blueprint(showCarsBP)
@@ -21,8 +22,9 @@ app.register_blueprint(userLoginBP)
 app.register_blueprint(addressToLocationBP)
 app.register_blueprint(stripeMethodBP)
 app.register_blueprint(paypalMethodBP)
-
+app.register_blueprint(electronicWalletBP)
 
 @app.route('/')
 def index():
     return jsonify({"message": "Index"})
+
