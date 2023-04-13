@@ -19,13 +19,9 @@ app.register_blueprint(carRegistrationBP)
 app.register_blueprint(showUserBP)
 app.register_blueprint(userLoginBP)
 app.register_blueprint(addressToLocationBP)
-app.register_blueprint(paymentMethodBP)
 app.register_blueprint(stripeMethodBP)
 app.register_blueprint(paypalMethodBP)
 
 @app.route('/')
 def index():
     return jsonify({"message": "Index"})
-
-
-

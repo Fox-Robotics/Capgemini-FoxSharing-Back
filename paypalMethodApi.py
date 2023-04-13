@@ -1,5 +1,5 @@
 import paypalrestsdk
-from databaseConection import paypalClientID, paypalClientSecret
+from config import paypalClientID, paypalClientSecret
 from flask import Blueprint, redirect
 from urllib import request
 
