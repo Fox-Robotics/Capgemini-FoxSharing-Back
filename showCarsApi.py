@@ -3,6 +3,7 @@ from databaseConection import mycursor
 
 showCarsBP = Blueprint('blueprint', __name__)
 
+
 @showCarsBP.route('/cars', methods=['GET'])
 def cars():
     mycursor.execute("SELECT * FROM Cars")
