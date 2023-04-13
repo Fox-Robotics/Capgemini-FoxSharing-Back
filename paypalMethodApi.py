@@ -5,6 +5,7 @@ from urllib import request
 
 paypalMethodBP = Blueprint('paypalMethodBP', __name__)
 
+
 @paypalMethodBP.route('/payment/paypal')
 def paypalPayment():
     paypalrestsdk.configure({

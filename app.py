@@ -6,7 +6,7 @@ from showUserApi import showUserBP
 from tripRegistrationApi import tripRegistrationBP
 from userLoginApi import userLoginBP
 from userRegistrationApi import userRegistrationBP
-from addressToLocation import addressToLocationBP
+from locationApi import addressToLocationBP
 from stripeMethodApi import stripeMethodBP
 from paypalMethodApi import paypalMethodBP
 
@@ -21,6 +21,7 @@ app.register_blueprint(userLoginBP)
 app.register_blueprint(addressToLocationBP)
 app.register_blueprint(stripeMethodBP)
 app.register_blueprint(paypalMethodBP)
+
 
 @app.route('/')
 def index():
