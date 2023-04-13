@@ -2,10 +2,10 @@ from flask import Blueprint, redirect
 from config import stripeSecretKey
 import stripe
 
-paymentMethodBP = Blueprint('paymentMethodBP', __name__)
+stripeMethodBP = Blueprint('stripeMethodBP', __name__)
 
-@paymentMethodBP.route('/payment')
-def payment():
+@stripeMethodBP.route('/payment/stripe')
+def stripePayment():
     stripe.api_key = stripeSecretKey
 
     total = 1000
