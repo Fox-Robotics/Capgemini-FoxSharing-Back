@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import Flask, jsonify, request, Blueprint, redirect, url_for
 from validations import valKilometers
 from databaseConection import mycursor, db
 import datetime
@@ -24,11 +24,17 @@ def trip():
             "finalLocation": finalLocation,
             "time": time,
             "kmTraveled": kmTraveled,
-            "publicKey": publicKey
+            "publicKey": publicKey,
+            "total": "000"
         }
-
-        mycursor.execute("INSERT INTO Trips (userID,initialLocation,finalLocation,time,kmTraveled,publicKey) VALUES (%(userID)s,%(initialLocation)s,%(finalLocation)s,%(time)s,%(kmTraveled)s,%(publicKey)s)", newTrip)
+        print(newTrip)
+        mycursor.execute("INSERT INTO Trips (userID,initialLocation,finalLocation,time,kmTraveled,publicKey,total) VALUES (%(userID)s,%(initialLocation)s,%(finalLocation)s,%(time)s,%(kmTraveled)s,%(publicKey)s,%(total)s)", newTrip)
         db.commit()
-        return jsonify({"message": "Trip Registered Successfully"})
+        mycursor.reset()
+        mycursor.execute("SELECT tripID FROM Trips WHERE publicKey=%(publicKey)s", {"publicKey": publicKey})
+        trip = mycursor.fetchone()
+        tripID = trip[0]
+        payment_url = url_for('paypalMethodBP.tripPaypalPayment', _external=True, tripID=tripID, kmTraveled=kmTraveled)
+        return redirect(payment_url)
     else:
         return jsonify({"message": "Trip Registered Unsuccessfully"})

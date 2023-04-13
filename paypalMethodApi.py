@@ -1,23 +1,28 @@
 import paypalrestsdk
 from config import paypalClientID, paypalClientSecret
-from flask import Blueprint, redirect
-from urllib import request
+from flask import Blueprint, redirect, request, url_for, jsonify
 
 paypalMethodBP = Blueprint('paypalMethodBP', __name__)
 
-
-@paypalMethodBP.route('/payment/paypal')
-def paypalPayment():
+@paypalMethodBP.route('/trip/payment/paypal', methods=['GET'])
+def tripPaypalPayment():
     paypalrestsdk.configure({
         "mode": "sandbox",
         "client_id": paypalClientID,
         "client_secret": paypalClientSecret
     })
 
-    total = 1000
+    kmTraveled = request.args.get('kmTraveled')
+    tripID = request.args.get('tripID')
+
+    print(kmTraveled, tripID)
+
+    total = kmTraveled * 100 * 20
 
     product = 'normalTrip'
-    price = total
+
+    success_url = url_for('electronicWalletBP.tripSuccessful', method='GET', _external=True, total=total, tripID=tripID)
+    cancel_url = url_for('electronicWalletBP.tripCancel', _external=True)
 
     payment = paypalrestsdk.Payment({
         "intent": "sale",
@@ -25,8 +30,8 @@ def paypalPayment():
             "payment_method": "paypal"
         },
         "redirect_urls": {
-            "return_url": "http://localhost:5000/execute_payment",
-            "cancel_url": "http://localhost:5000/cancel_payment"
+            "return_url": success_url,
+            "cancel_url": cancel_url
         },
         "transactions": [{
             "item_list": {
@@ -39,7 +44,62 @@ def paypalPayment():
                 }]
             },
             "amount": {
-                "total": price,
+                "total": total,
+                "currency": "MXN"
+            },
+            "description": "Item Description"
+        }]
+    })
+
+    print("here")
+
+    if payment.create():
+        for link in payment.links:
+            if link.method == "REDIRECT":
+                redirect_url = str(link.href)
+                print(redirect_url)
+                return redirect(redirect_url)
+    else:
+        print(payment.error)
+        return jsonify({"message": "An error has occurred"})
+
+@paypalMethodBP.route('/wallet/payment/paypal', methods=['GET'])
+def walletPaypalPayment():
+    paypalrestsdk.configure({
+        "mode": "sandbox",
+        "client_id": paypalClientID,
+        "client_secret": paypalClientSecret
+    })
+
+    userID = request.args.get('userID')
+    total = request.args.get('total')
+
+    product = 'walletDeposit'
+
+    success_url = url_for('electronicWalletBP.walletSuccessful', method='GET', _external=True, total=total, userID=userID)
+    cancel_url = url_for('electronicWalletBP.walletCancel', _external=True)
+
+    payment = paypalrestsdk.Payment({
+        "intent": "sale",
+        "payer": {
+            "payment_method": "paypal"
+        },
+        "redirect_urls": {
+            "return_url": success_url,
+            "cancel_url": cancel_url
+        },
+        "transactions": [{
+            "item_list": {
+                "items": [{
+                    "name": product,
+                    "sku": "Item SKU",
+                    "price": total,
+                    "currency": "MXN",
+                    "quantity": 1
+                }]
+            },
+            "amount": {
+                "total": total,
                 "currency": "MXN"
             },
             "description": "Item Description"
@@ -50,22 +110,7 @@ def paypalPayment():
         for link in payment.links:
             if link.method == "REDIRECT":
                 redirect_url = str(link.href)
+                print(redirect_url)
                 return redirect(redirect_url)
     else:
         print(payment.error)
-
-@paypalMethodBP.route('/execute_payment')
-def execute_payment():
-    payment_id = request.args.get('paymentId')
-    payer_id = request.args.get('PayerID')
-
-    payment = paypalrestsdk.Payment.find(payment_id)
-
-    if payment.execute({"payer_id": payer_id}):
-        return "Payment completed successfully."
-    else:
-        return str(payment.error)
-
-@paypalMethodBP.route('/cancel_payment')
-def cancel_payment():
-    return print("Payment canceled.")

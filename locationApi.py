@@ -16,7 +16,10 @@ def addressFuzzy():
     answer = []
     if len(json_object["results"]) > 0:
         for result in json_object["results"]:
-            answer.append(result["address"]["freeformAddress"])
+            dic = {
+                "data" : result["address"]["freeformAddress"]
+            }
+            answer.append(dic)
         return str(answer)
     return "[]"
 
